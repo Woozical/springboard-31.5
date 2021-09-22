@@ -44,17 +44,13 @@ describe('should generate appropriate text', ()=>{
         const arr = markvoTextToArray(text);
 
         for (let idx = 0; idx < arr.length; idx++){
-            const word = arr[idx].toLowerCase();
+            const word = arr[idx]
             const chain = machine.chains[word];
             const nextWord = arr[idx + 1];
 
-            if (chain.includes(null)){
-                // Next word should be capitalized, if exists
-                if (nextWord) expect(/^[A-Z]/.test(nextWord)).toBeTruthy();
-                else expect(nextWord).toBeUndefined();
-            } else {
+            if (nextWord && !chain.includes(null)){
                 // If there is a next word, it should be in the current words markov chain
-                if (nextWord) expect(chain).toContain(nextWord.toLowerCase());
+                expect(chain).toContain(nextWord);
             }
         }
     });
