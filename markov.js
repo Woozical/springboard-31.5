@@ -50,8 +50,14 @@ class MarkovMachine {
       }
       // Pick a random following word.
       else {
-        const curWord = output[count - 1].toLowerCase();
-        const availWords = this.chains[curWord];
+        const curWord = output[count - 1];
+        let availWords;
+        if (!Object.keys(this.chains).includes(curWord)){
+          console.log(curWord);
+          availWords = this.chains[curWord.toLowerCase()];
+        } else {
+          availWords = this.chains[curWord];
+        }
         const newWord = availWords[Math.trunc(Math.random() * availWords.length)];
         // If word is null, punctuate, new starting word on next pass.
         if (newWord === null){
@@ -68,4 +74,4 @@ class MarkovMachine {
   }
 }
 
-module.exports = {MarkovMachine}
+module.exports = MarkovMachine;

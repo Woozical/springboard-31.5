@@ -1,4 +1,4 @@
-const {MarkovMachine} = require('./markov');
+const MarkovMachine = require('./markov');
 
 describe('should set up markov chains', ()=>{
     test('the cat in the hat', ()=>{
