@@ -1,0 +1,62 @@
+const {MarkovMachine} = require('./markov');
+
+describe('should set up markov chains', ()=>{
+    test('the cat in the hat', ()=>{
+        const machine = new MarkovMachine('the cat in the hat');
+        expect(machine.chains).toEqual(
+            {"the": ["cat", "hat"], "cat": ["in"], "in": ["the"], "hat": [null]}
+        );
+    });
+    test('red cats run long and run far', ()=>{
+        const newMachine = new MarkovMachine('red cats run long and run far');
+        expect(newMachine.chains).toEqual(
+            {red: ['cats'], cats: ['run'], run: ['long', 'far'], long:['and'], and:['run'], far:[null]}
+        );
+    });
+})
+
+describe('should generate appropriate text', ()=>{
+    let machine;
+    beforeEach( ()=> {
+        machine = new MarkovMachine('red cats run long and run far');
+    });
+
+    function markvoTextToArray(text){
+        // Strip punctuation and convert to array of words
+        return text.replace(/\./g, '').split(' ');
+    }
+
+    test('text length should be 100 words by default', ()=>{
+        let text = machine.makeText();
+        const arr = markvoTextToArray(text);
+
+        expect(arr.length).toEqual(100);
+    });
+
+    test('variable text length', ()=>{
+        let text = machine.makeText(50);
+        const arr = markvoTextToArray(text);
+        expect(arr.length).toEqual(50);
+    });
+
+    test('text follows chains', ()=> {
+        let text = machine.makeText();
+        const arr = markvoTextToArray(text);
+
+        for (let idx = 0; idx < arr.length; idx++){
+            const word = arr[idx].toLowerCase();
+            const chain = machine.chains[word];
+            const nextWord = arr[idx + 1];
+
+            if (chain.includes(null)){
+                // Next word should be capitalized, if exists
+                if (nextWord) expect(/^[A-Z]/.test(nextWord)).toBeTruthy();
+                else expect(nextWord).toBeUndefined();
+            } else {
+                // If there is a next word, it should be in the current words markov chain
+                if (nextWord) expect(chain).toContain(nextWord.toLowerCase());
+            }
+        }
+    });
+
+})
