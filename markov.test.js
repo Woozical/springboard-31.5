@@ -21,27 +21,22 @@ describe('should generate appropriate text', ()=>{
         machine = new MarkovMachine('red cats run long and run far');
     });
 
-    function markvoTextToArray(text){
-        // Strip punctuation and convert to array of words
-        return text.replace(/\./g, '').split(' ');
-    }
-
     test('text length should be 100 words by default', ()=>{
         let text = machine.makeText();
-        const arr = markvoTextToArray(text);
+        const arr = text.split(' ');
 
         expect(arr.length).toEqual(100);
     });
 
     test('variable text length', ()=>{
         let text = machine.makeText(50);
-        const arr = markvoTextToArray(text);
+        const arr = text.split(' ');
         expect(arr.length).toEqual(50);
     });
 
     test('text follows chains', ()=> {
         let text = machine.makeText();
-        const arr = markvoTextToArray(text);
+        const arr = text.split(' ');
 
         for (let idx = 0; idx < arr.length; idx++){
             const word = arr[idx]
